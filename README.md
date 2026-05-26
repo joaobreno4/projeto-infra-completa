@@ -45,6 +45,7 @@ projeto-infra-completa/
 │       ├── app_deploy/      # Deploy da App (Nginx) e do Node Exporter
 │       └── monitoring/      # Configuração e inicialização do Prometheus + Grafana
 └── .gitignore               # Proteção de chaves (.pem) e estados (.tfstate)
+
 Como Executar o Projeto
 1. Provisionando a Infraestrutura (Terraform)
 Navegue até a pasta do Terraform, inicialize o provedor e aplique o plano:
