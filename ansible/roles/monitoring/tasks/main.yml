@@ -1,0 +1,44 @@
+---
+- name: Criar pastas para o monitoramento
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /opt/monitoring
+    - /opt/monitoring/prometheus
+
+- name: Renderizar configuracao dinamica do Prometheus
+  template:
+    src: prometheus.yml.j2
+    dest: /opt/monitoring/prometheus/prometheus.yml
+    mode: '0644'
+
+- name: Criar docker-compose do Monitoramento
+  copy:
+    dest: /opt/monitoring/docker-compose.yml
+    content: |
+      version: '3.8'
+      services:
+        prometheus:
+          image: prom/prometheus:latest
+          container_name: prometheus
+          volumes:
+            - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+          ports:
+            - "9090:9090"
+          restart: always
+
+        grafana:
+          image: grafana/grafana:latest
+          container_name: grafana
+          ports:
+            - "3000:3000"
+          environment:
+            - GF_SECURITY_ADMIN_PASSWORD=admin_sre_password
+          restart: always
+
+- name: Rodar a Stack de Observabilidade
+  command:
+    cmd: docker compose up -d
+    chdir: /opt/monitoring

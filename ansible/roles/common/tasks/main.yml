@@ -1,0 +1,32 @@
+---
+- name: Atualizar o cache do apt
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Instalar ferramentas essenciais do sistema
+  apt:
+    name:
+      - curl
+      - htop
+      - vim
+      - git
+      - ufw
+    state: present
+
+- name: Permitir portas no Firewall (UFW)
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop:
+    - '22'
+    - '80'
+    - '3000'
+    - '9090'
+    - '9100'
+
+- name: Habilitar o UFW
+  ufw:
+    state: enabled
+    policy: deny

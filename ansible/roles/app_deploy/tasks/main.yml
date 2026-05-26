@@ -1,0 +1,17 @@
+---
+- name: Criar pasta da aplicacao
+  file:
+    path: /opt/minha-app
+    state: directory
+    mode: '0755'
+
+- name: Renderizar o arquivo docker-compose da app
+  template:
+    src: docker-compose-app.yml.j2
+    dest: /opt/minha-app/docker-compose.yml
+    mode: '0644'
+
+- name: Subir containers da App e do NodeExporter
+  command:
+    cmd: docker compose up -d
+    chdir: /opt/minha-app

@@ -1,0 +1,9 @@
+---
+- name: Orquestracao Completa no Servidor Unificado
+  hosts: all
+  become: true
+  roles:
+    - common
+    - docker
+    - app_deploy
+    - monitoring
